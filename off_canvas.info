@@ -1,0 +1,8 @@
+name = Foundation Off Canvas
+description = Add an off canvas tab bar and region to your theme.
+core = 7.x
+
+stylesheets[all][] = foundation/off_canvas.foundation.css
+
+scripts[] = foundation/off_canvas.foundation.min.js
+

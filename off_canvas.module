@@ -1,0 +1,96 @@
+<?php
+function off_canvas_system_info_alter(&$info, $file, $type) {
+  if ($type == 'theme') {
+    $info['regions']['off_canvas'] = t('Off Canvas');
+  }
+}
+
+function off_canvas_page_alter(&$page){
+  
+  if($off_canvas=render($page['off_canvas'])){
+    $page['page_top']['off_cavas_top']=array(
+    '#markup'=>
+    '<div class="off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+        <nav class="tab-bar">
+          <section class="left-small">
+            <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+          </section>
+        </nav>',
+    '#weight' => 25,
+    );
+    $page['page_bottom']['off_cavas_bottom']=array(
+    '#markup'=>
+     '<aside class="left-off-canvas-menu">'.$off_canvas.'      
+      </aside>
+      <a class="exit-off-canvas"></a>
+      </div>
+    </div>
+    <script>jQuery(document).foundation();</script>',
+    '#weight' => 25,
+    );
+  }
+}
+$off_canvas_css_path=drupal_get_path('module','off_canvas').'/foundation/off_canvas.foundation.css';
+$off_canvas_js_path=drupal_get_path('module','off_canvas').'/foundation/off_canvas.foundation.js';
+
+//drupal_add_css($off_canvas_css_path);
+//drupal_add_js($off_canvas_js_path);
+//Override region page_top and page_bottom to
+/*
+function off_canvas_theme_registry_alter(&$theme_registry) {
+  // Defined path to current module.
+  $module_path = drupal_get_path('module', 'off_canvas');
+  // Find all .tpl.php files in this module's folder recursively.
+  $template_file_objects = drupal_find_theme_templates($theme_registry, '.tpl.php', $module_path);
+  // Itterate through all found template file objects.
+  foreach ($template_file_objects as $key => $template_file_object) {
+    // If the template has not already been overridden by a theme.
+    if (!preg_match('#/themes/#', $theme_registry[$key]['theme path'])) {
+      // Alter the theme path and template elements.
+      $theme_registry[$key]['theme path'] = $module_path;
+      $theme_registry[$key] = array_merge($theme_registry[$key], $template_file_object);
+    }
+  }
+}
+*/
+// Create a variable to store the path to this module
+function off_canvas_theme_registry_alter(&$theme_registry) {
+  $module_path=drupal_get_path('module', 'off_canvas');
+  $theme_registry_copy = $theme_registry;
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'my_custom_theme', $module_path);
+  $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
+  // A list of templates the module will provide templates for
+  $hooks = array('page');
+  foreach ($hooks as $h) {
+    // Add the key 'theme paths' if it doesn't exist in this theme's registry
+    if (!isset($theme_registry[$h]['theme path'])) {
+      $theme_registry[$h]['theme path'] = array();
+    }
+    //Shift this module's directory to the top of the theme path list
+    if(is_array($theme_registry[$h]['theme path'])) {
+      $first_element = array_shift($theme_registry[$h]['theme path']);
+      if ($first_element) {
+        array_unshift($theme_registry[$h]['theme path'], $first_element, $module_path);
+      } else {
+        array_unshift($theme_registry[$h]['theme path'], $module_path);
+      }
+    }
+  }
+}
+
+/*
+function off_canvas_theme_registry_alter(&$theme_registry) {
+  $my_path = drupal_get_path('module', 'off_canvas');
+  $hooks = array('region');  // you can do this to any number of template theme hooks
+  // insert our module
+  foreach ($hooks as $h) {
+    _off_canvas_insert_after_first_element($theme_registry[$h]['theme path'], $my_path);
+  }
+}
+
+function _off_canvas_insert_after_first_element(&$a, $element) {
+  $first_element = array_shift($a);
+  array_unshift($a, $first_element, $element);
+}
+*/
