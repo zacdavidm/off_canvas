@@ -4,5 +4,5 @@ core = 7.x
 
 stylesheets[all][] = foundation/off_canvas.foundation.css
 
-scripts[] = foundation/off_canvas.foundation.min.js
+scripts[] = foundation/vanillajs_off_canvas.min.js
 
