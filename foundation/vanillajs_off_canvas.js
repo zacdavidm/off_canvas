@@ -3,7 +3,9 @@ vanillajs_off_canvas = {
   
   version : '5.2.2x1',
   init : function(){
-    this.events();
+    if(typeof jQuery(document).foundation == 'undefined'){ 
+      this.events();
+    }
   },
   
   events : function(){
