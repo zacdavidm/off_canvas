@@ -31,8 +31,6 @@ function off_canvas_page_alter(&$page){
     );
   }
 }
-$off_canvas_css_path=drupal_get_path('module','off_canvas').'/foundation/off_canvas.foundation.css';
-$off_canvas_js_path=drupal_get_path('module','off_canvas').'/foundation/off_canvas.foundation.js';
 
 // Create a variable to store the path to this module
 function off_canvas_theme_registry_alter(&$theme_registry) {
